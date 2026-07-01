@@ -39,7 +39,7 @@ export default function ReadPage() {
   // Passage guard — if someone navigates here directly with no passage, send them home.
   useEffect(() => {
     if (hydrated && !passage.trim()) {
-      router.replace('/');
+      router.replace('/start');
     }
   }, [hydrated, passage, router]);
 
@@ -99,15 +99,14 @@ export default function ReadPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
       {/* Header */}
-      <div className="mb-6 flex items-center gap-3">
+      <div className="mb-8 flex items-center justify-between">
+        <span className="font-semibold text-slate-900">FluentRead</span>
         <button
-          onClick={() => router.push('/')}
-          className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
-          aria-label="Back to home"
+          onClick={() => router.push('/start')}
+          className="text-sm text-slate-400 transition hover:text-slate-700"
         >
           ← Back
         </button>
-        <h1 className="text-xl font-bold text-slate-900">FluentRead</h1>
       </div>
 
       {/* Browser support warning */}
@@ -118,9 +117,9 @@ export default function ReadPage() {
       )}
 
       {/* Passage display */}
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Read this aloud
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
+          Your passage
         </p>
         <div className="max-h-56 overflow-y-auto text-base leading-relaxed text-slate-800 sm:max-h-80">
           {passage}
@@ -129,20 +128,22 @@ export default function ReadPage() {
 
       {/* ── IDLE ──────────────────────────────────────────────────────── */}
       {phase === 'idle' && (
-        <div className="mt-10 flex flex-col items-center gap-4">
+        <div className="mt-12 flex flex-col items-center gap-5">
           <button
             onClick={handleStart}
             disabled={!supported}
-            className="flex h-20 w-20 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition hover:bg-indigo-700 active:scale-95 disabled:opacity-40"
+            className="flex h-24 w-24 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl ring-4 ring-indigo-100 transition hover:bg-indigo-700 active:scale-95 disabled:opacity-40"
             aria-label="Start recording"
           >
-            {/* Microphone icon */}
-            <svg className="h-9 w-9" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path d="M8.25 4.5a3.75 3.75 0 1 1 7.5 0v8.25a3.75 3.75 0 1 1-7.5 0V4.5z" />
               <path d="M6 10.5a.75.75 0 0 1 .75.75v1.5a5.25 5.25 0 1 0 10.5 0v-1.5a.75.75 0 0 1 1.5 0v1.5a6.751 6.751 0 0 1-6 6.709v2.291h3a.75.75 0 0 1 0 1.5h-7.5a.75.75 0 0 1 0-1.5h3v-2.291A6.751 6.751 0 0 1 5.25 12.75v-1.5A.75.75 0 0 1 6 10.5z" />
             </svg>
           </button>
-          <p className="text-sm text-slate-500">Tap to start recording</p>
+          <div className="text-center">
+            <p className="font-semibold text-slate-700">When you're ready, press record</p>
+            <p className="mt-1 text-sm text-slate-400">Read the passage above at your natural pace</p>
+          </div>
         </div>
       )}
 

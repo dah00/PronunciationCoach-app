@@ -148,7 +148,7 @@ export default function FeedbackPage() {
     if (!hydrated) return;
 
     if (segments.length === 0 && !report) {
-      router.replace('/');
+      router.replace('/start');
       return;
     }
 
@@ -179,7 +179,7 @@ export default function FeedbackPage() {
   const handleNewPassage = () => {
     resetSession();
     setPassage('');
-    router.push('/');
+    router.push('/start');
   };
 
   if (!hydrated || loading) {
@@ -218,12 +218,19 @@ export default function FeedbackPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
-      <div className="mb-6 flex items-center gap-3">
-        <button onClick={handleNewPassage}
-          className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800">
-          ← New Passage
+      <div className="mb-8 flex items-center justify-between">
+        <span className="font-semibold text-slate-900">FluentRead</span>
+        <button
+          onClick={handleNewPassage}
+          className="text-sm text-slate-400 transition hover:text-slate-700"
+        >
+          New Passage →
         </button>
-        <h1 className="text-xl font-bold text-slate-900">Your Feedback</h1>
+      </div>
+
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-slate-900">Your Feedback</h1>
+        <p className="mt-1 text-sm text-slate-500">Here's how your reading session went.</p>
       </div>
 
       <div className="mb-6 rounded-xl border border-indigo-100 bg-indigo-50 px-5 py-4">
@@ -236,21 +243,7 @@ export default function FeedbackPage() {
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
             Your recording
           </p>
-          <audio
-            src={audioUrl}
-            controls
-            className="w-full"
-            onLoadedMetadata={(e) => {
-              const a = e.target;
-              if (a.duration === Infinity || isNaN(a.duration)) {
-                a.currentTime = 1e101;
-                a.addEventListener('timeupdate', function fix() {
-                  a.removeEventListener('timeupdate', fix);
-                  a.currentTime = 0;
-                });
-              }
-            }}
-          />
+          <audio src={audioUrl} controls className="w-full" />
         </div>
       )}
 

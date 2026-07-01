@@ -2,6 +2,24 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+async function fixWebmDuration(blob, durationMs) {
+  if (!blob.type.includes('webm')) return blob;
+  const buf = await blob.arrayBuffer();
+  const view = new DataView(buf);
+  for (let i = 0; i < buf.byteLength - 10; i++) {
+    if (view.getUint8(i) === 0x44 &&
+        view.getUint8(i + 1) === 0x89 &&
+        view.getUint8(i + 2) === 0x88) {
+      const val = view.getFloat64(i + 3);
+      if (!isFinite(val) || val <= 0) {
+        view.setFloat64(i + 3, durationMs);
+      }
+      break;
+    }
+  }
+  return new Blob([buf], { type: blob.type });
+}
+
 export function useAudioRecorder() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -44,17 +62,19 @@ export function useAudioRecorder() {
       if (e.data.size > 0) chunksRef.current.push(e.data);
     };
 
-    // When stop() is called, onstop fires after the final ondataavailable.
-    recorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, {
+    const startedAt = Date.now();
+
+    recorder.onstop = async () => {
+      let blob = new Blob(chunksRef.current, {
         type: recorder.mimeType || 'audio/webm',
       });
+      blob = await fixWebmDuration(blob, Date.now() - startedAt);
       setAudioUrl(URL.createObjectURL(blob));
       cleanup();
     };
 
     recorderRef.current = recorder;
-    setRecordingStartTime(Date.now());
+    setRecordingStartTime(startedAt);
     recorder.start();
     setIsRecording(true);
   }, [audioUrl, cleanup]);

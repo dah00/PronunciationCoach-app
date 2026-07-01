@@ -19,10 +19,10 @@ todos:
     status: completed
   - id: step-5a-voice-recording
     content: "Step 5A: Record user's voice with MediaRecorder for playback in feedback"
-    status: pending
+    status: completed
   - id: step-5b-tts-route
     content: "Step 5B: Uniform correct pronunciation via OpenAI TTS (/api/tts route)"
-    status: pending
+    status: completed
   - id: step-6-polish-deploy
     content: "Step 6: Error states, mobile polish, deploy to Vercel"
     status: pending
